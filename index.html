@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced JavaScript & CSS3 Demo</title>
+    <style>
+        /* Previous styles remain the same, adding new ones below */
+        
+        /* Enhanced button with transition */
+        button {
+            transition: all 0.3s ease;
+            transform: scale(1);
+        }
+        
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        /* Animation for form submission */
+        @keyframes formSuccess {
+            0% { transform: scale(1); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .success {
+            animation: formSuccess 1.5s ease;
+        }
+        
+        /* Animation for the counter */
+        @keyframes counterChange {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); color: #e74c3c; }
+            100% { transform: scale(1); color: inherit; }
+        }
+        
+        .counter-animate {
+            animation: counterChange 0.5s ease;
+        }
+        
+        /* Animation for theme toggle */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .theme-spin {
+            animation: spin 0.5s linear;
+        }
+        
+        /* New animated element */
+        #animated-box {
+            width: 100px;
+            height: 100px;
+            background-color: #3498db;
+            margin: 30px auto;
+            border-radius: 8px;
+            transition: all 0.5s ease;
+            cursor: pointer;
+        }
+        
+        #animated-box:hover {
+            background-color: #2980b9;
+        }
+        
+        .box-animate {
+            animation: boxPulse 2s infinite;
+        }
+        
+        @keyframes boxPulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 rgba(52, 152, 219, 0.7); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(52, 152, 219, 0.7); }
+            100% { transform: scale(1); box-shadow: 0 0 0 rgba(52, 152, 219, 0.7); }
+        }
+        
+        /* Animation for accordion */
+        .accordion-content {
+            display: none;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            max-height: 0;
+        }
+        
+        .accordion.active + .accordion-content {
+            display: block;
+            max-height: 500px;
+        }
+        
+        /* Loading animation */
+        .loader {
+            display: none;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        .dark-mode .loader {
+            border-color: #34495e;
+            border-top-color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <button id="theme-toggle">Toggle Dark Mode</button>
+    
+    <h1>Advanced JavaScript & CSS3 Demo</h1>
+    
+    <section id="animations-section">
+        <h2>CSS3 Animations & Transitions</h2>
+        
+        <div id="animated-box" class="box-animate"></div>
+        
+        <div style="text-align: center;">
+            <button id="toggle-animation">Toggle Animation</button>
+            <button id="change-color">Change Color</button>
+        </div>
+        
+        <div class="loader" id="page-loader"></div>
+    </section>
+    
+    <!-- Previous sections remain the same -->
+    <section id="event-listeners">
+        <!-- ... previous content ... -->
+    </section>
+    
+    <section id="form-validation">
+        <!-- ... previous content ... -->
+    </section>
+    
+    <section id="interactive-elements">
+        <!-- ... previous content ... -->
+    </section>
+
+    <script>
+        // Enhanced theme toggle with animation and localStorage
+        const themeToggle = document.getElementById('theme-toggle');
+        
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            // Add spin animation
+            themeToggle.classList.add('theme-spin');
+            
+            // Toggle dark mode
+            document.body.classList.toggle('dark-mode');
+            
+            // Save preference to localStorage
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            
+            // Remove animation class after animation completes
+            setTimeout(() => {
+                themeToggle.classList.remove('theme-spin');
+            }, 500);
+        });
+
+        // Animated box section
+        const animatedBox = document.getElementById('animated-box');
+        const toggleAnimationBtn = document.getElementById('toggle-animation');
+        const changeColorBtn = document.getElementById('change-color');
+        const loader = document.getElementById('page-loader');
+        
+        // Check for saved box color
+        const savedBoxColor = localStorage.getItem('boxColor');
+        if (savedBoxColor) {
+            animatedBox.style.backgroundColor = savedBoxColor;
+        }
+        
+        // Toggle animation
+        toggleAnimationBtn.addEventListener('click', () => {
+            animatedBox.classList.toggle('box-animate');
+            
+            // Save animation state to localStorage
+            localStorage.setItem('boxAnimation', animatedBox.classList.contains('box-animate') ? 'on' : 'off');
+        });
+        
+        // Change color
+        changeColorBtn.addEventListener('click', () => {
+            // Show loader
+            loader.style.display = 'block';
+            
+            // Simulate async operation
+            setTimeout(() => {
+                const colors = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6'];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                animatedBox.style.backgroundColor = randomColor;
+                localStorage.setItem('boxColor', randomColor);
+                
+                // Hide loader
+                loader.style.display = 'none';
+                
+                // Add temporary pulse effect
+                animatedBox.style.animation = 'none';
+                void animatedBox.offsetWidth; // Trigger reflow
+                animatedBox.style.animation = 'boxPulse 0.5s ease';
+            }, 1000);
+        });
+        
+        // Initialize box animation state from localStorage
+        const savedAnimationState = localStorage.getItem('boxAnimation');
+        if (savedAnimationState === 'off') {
+            animatedBox.classList.remove('box-animate');
+        }
+
+        // Enhanced counter with animation and localStorage
+        let count = parseInt(localStorage.getItem('counterValue')) || 0;
+        const counterValue = document.getElementById('counter-value');
+        counterValue.textContent = count;
+        
+        function updateCounter(newValue) {
+            count = newValue;
+            counterValue.textContent = count;
+            localStorage.setItem('counterValue', count);
+            
+            // Add animation
+            counterValue.classList.add('counter-animate');
+            setTimeout(() => {
+                counterValue.classList.remove('counter-animate');
+            }, 500);
+        }
+        
+        incrementBtn.addEventListener('click', () => {
+            updateCounter(count + 1);
+        });
+        
+        decrementBtn.addEventListener('click', () => {
+            updateCounter(count - 1);
+        });
+        
+        resetBtn.addEventListener('click', () => {
+            updateCounter(0);
+        });
+
+        // Enhanced form with localStorage for draft saving
+        const formInputs = form.querySelectorAll('input, textarea');
+        
+        // Load saved form data
+        function loadFormData() {
+            formInputs.forEach(input => {
+                const savedValue = localStorage.getItem(`form_${input.name}`);
+                if (savedValue) {
+                    input.value = savedValue;
+                    
+                    // Trigger input event to update character count
+                    if (input.name === 'comments') {
+                        input.dispatchEvent(new Event('input'));
+                    }
+                }
+            });
+        }
+        
+        // Save form data on input
+        formInputs.forEach(input => {
+            input.addEventListener('input', () => {
+                localStorage.setItem(`form_${input.name}`, input.value);
+            });
+        });
+        
+        // Clear form data on successful submission
+        form.addEventListener('submit', (e) => {
+            if (isValid) {
+                formInputs.forEach(input => {
+                    localStorage.removeItem(`form_${input.name}`);
+                });
+            }
+        });
+        
+        // Load form data when page loads
+        window.addEventListener('load', loadFormData);
+        
+        // Accordion animation enhancement
+        const accordions = document.getElementsByClassName('accordion');
+        
+        for (let i = 0; i < accordions.length; i++) {
+            // Load saved accordion state
+            const savedState = localStorage.getItem(`accordion_${i}`);
+            if (savedState === 'open') {
+                accordions[i].classList.add('active');
+                const content = accordions[i].nextElementSibling;
+                content.style.display = 'block';
+                content.style.maxHeight = '500px';
+            }
+            
+            accordions[i].addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                
+                // Save state to localStorage
+                localStorage.setItem(`accordion_${i}`, this.classList.contains('active') ? 'open' : 'closed');
+                
+                if (content.style.maxHeight === '500px') {
+                    content.style.maxHeight = '0';
+                    setTimeout(() => {
+                        content.style.display = 'none';
+                    }, 300);
+                } else {
+                    content.style.display = 'block';
+                    content.style.maxHeight = '500px';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
